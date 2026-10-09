@@ -11,3 +11,12 @@ package-lock.json
 .env
 .env.*
 !.env.example
+
+# Ported verbatim from design/landing-page.html: never reformat
+web/src/styles/tokens.css
+web/src/styles/base.css
+web/src/styles/header.css
+web/src/styles/hero.css
+web/src/styles/board.css
+web/src/styles/sections.css
+web/src/styles/motion.css

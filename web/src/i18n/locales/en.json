@@ -1,0 +1,308 @@
+{
+  "app": {
+    "name": "Paperwork Pilot",
+    "skip": "Skip to content",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "disclaimer": "Paperwork Pilot is a guide and not legal advice. Fees and rules change, so each step carries a source and a last-verified date.",
+    "builtIn": "Built in Bengaluru.",
+    "errorTitle": "Something went wrong",
+    "networkError": "Could not reach the server. Check your connection and try again.",
+    "notFoundTitle": "That page does not exist",
+    "notFoundBody": "The address may be wrong, or the page may have moved.",
+    "backHome": "Back to the start"
+  },
+  "header": {
+    "logoAria": "Paperwork Pilot, back to top",
+    "mainNav": "Main",
+    "how": "How it works",
+    "pros": "For professionals",
+    "demo": "Try the demo",
+    "themeToDark": "Switch to dark theme",
+    "themeToLight": "Switch to light theme"
+  },
+  "rail": {
+    "aria": "Page sections",
+    "situation": "Situation",
+    "route": "Route",
+    "how": "How it works",
+    "pros": "Professionals",
+    "start": "Start"
+  },
+  "hero": {
+    "kicker": "Bengaluru first. Bereavement, moving, starting a business.",
+    "titleAria": "Know the order before you join the queue.",
+    "words": ["Know", "the", "order", "before", "you", "join", "the", "queue."],
+    "markFrom": "1",
+    "markTo": "2",
+    "lede": "Tell Paperwork Pilot what has happened. It lists every form, document, office, fee and wait in the order that works, so step 5 never needs something from step 8."
+  },
+  "intake": {
+    "label": "What's happening in your life?",
+    "placeholders": [
+      "my father passed away",
+      "I'm moving to Bengaluru with a toddler",
+      "I'm starting a small business"
+    ],
+    "submit": "Plot my route",
+    "chipsAria": "Pick a situation",
+    "statusEmpty": "Type what is happening, or pick one of the situations below.",
+    "statusNoMatch": "This demo covers three situations. Pick one below to see its route.",
+    "statusReady": "Route ready for: {{label}}.",
+    "statusError": "Could not work that out just now. Pick one of the situations below instead.",
+    "loadingChips": "Loading situations…"
+  },
+  "token": {
+    "nowServing": "NOW SERVING",
+    "yourToken": "YOUR TOKEN",
+    "ahead": "{{count}} AHEAD OF YOU",
+    "yourTurn": "YOUR TURN. COUNTER 4",
+    "foot": "Four counters. One of them has to come first."
+  },
+  "board": {
+    "kickerSample": "Sample route. Figures are for illustration.",
+    "kickerChecked": "Route checked against official sources. Confirm each step's source and date.",
+    "stepsDone": "{{done}} of {{total}} steps done",
+    "resetDemo": "Reset demo",
+    "resetCase": "Reset progress",
+    "resetConfirm": "Clear every step and document tick on this case? This cannot be undone.",
+    "stepsAria": "Steps in order",
+    "detailAria": "Step details",
+    "note": "Select any step. Tick the documents you already hold, then mark it done and watch what unlocks. In the live product every step shows its source and a last-verified date.",
+    "noteCase": "Select any step. Tick the documents you already hold, then mark it done and watch what unlocks. Every step shows its source and when it was last verified.",
+    "openFull": "Open full page",
+    "eventDate": "Date",
+    "eventDateHint": "Add the date to see deadlines.",
+    "eventDateSaved": "Date saved. Deadlines updated.",
+    "eventDateCleared": "Date cleared.",
+    "loading": "Loading your route…",
+    "loadError": "We could not load this route.",
+    "demoReset": "Demo reset.",
+    "caseReset": "Progress reset."
+  },
+  "step": {
+    "stepOf": "Step {{n}} of {{total}}",
+    "badgeDone": "Done",
+    "badgeNext": "Next up",
+    "badgeReady": "Ready",
+    "badgeLocked": "Locked",
+    "badgeAfter": "After {{numbers}}",
+    "notYet": "Not yet.",
+    "waitsForOne": "This step waits for this step:",
+    "waitsForMany": "This step waits for these steps:",
+    "jump": "Step {{n}}, {{title}}",
+    "form": "Form",
+    "where": "Where",
+    "fee": "Fee",
+    "wait": "Typical wait",
+    "deadline": "Deadline",
+    "portal": "Portal",
+    "docsLegend": "Documents to carry",
+    "docFrom": "From step {{n}}",
+    "docComesFrom": "Comes from step {{n}}",
+    "markDone": "Mark step done",
+    "hintLocked": "Finish the steps it waits for first.",
+    "hintAllTicked": "All documents ticked.",
+    "hintTick": "Tick each document you are carrying to finish this step.",
+    "doneNext": "Step done. Step {{n}} is ready.",
+    "doneComplete": "Step done. The route is complete.",
+    "openStep": "Open step {{n}}",
+    "undo": "Undo",
+    "stamp": "Done",
+    "stampSmallSample": "FILED · SAMPLE",
+    "stampSmall": "FILED",
+    "deadlineBy": "By {{date}}",
+    "deadlineLeft_one": "{{count}} day left",
+    "deadlineLeft_other": "{{count}} days left",
+    "deadlineToday": "Due today",
+    "deadlineOverdue_one": "Overdue by {{count}} day",
+    "deadlineOverdue_other": "Overdue by {{count}} days"
+  },
+  "tips": {
+    "kickerSample": "Tip from the queue · sample",
+    "kickerUser": "Tip from a visitor · {{date}}",
+    "flaggedStale_one": "Flagged out of date by {{count}} person",
+    "flaggedStale_other": "Flagged out of date by {{count}} people",
+    "flag": "This looks out of date",
+    "flagged": "Flagged, thank you"
+  },
+  "verify": {
+    "heading": "Source and status",
+    "sample": "Sample data. Not verified.",
+    "neverVerified": "Last verified: never.",
+    "lastVerified": "Last verified: {{date}}.",
+    "staleVerified": "Last verified: {{date}}, more than {{days}} days ago. Check the source before you rely on it.",
+    "source": "Source",
+    "sourceUnchecked": "Source (not yet checked)",
+    "unverifiedEdited": "Not verified. Last edited: {{date}}."
+  },
+  "live": {
+    "stepDone": "Step {{n}} done.",
+    "moreReady_one": "{{count}} more step is now ready.",
+    "moreReady_other": "{{count}} more steps are now ready.",
+    "reopened": "Step {{n}} reopened.",
+    "relocked_one": "{{count}} later step is locked again.",
+    "relocked_other": "{{count}} later steps are locked again.",
+    "docTicked": "{{label}} ticked.",
+    "docUnticked": "{{label}} unticked.",
+    "selected": "Step {{n}} selected.",
+    "failed": "That did not work: {{message}}"
+  },
+  "features": {
+    "how": {
+      "kicker": "How it works",
+      "title": "Every step knows what it needs from the others.",
+      "body": "Official information exists, but it sits on dozens of sites and never tells you the sequence. Paperwork Pilot stores each step as a link in a chain, so the order is worked out for you."
+    },
+    "graph": {
+      "aria": "Four steps in a row: register the death, certified copies, legal heir certificate, bank claim. The bank claim also needs the certified copies directly, so it waits for both.",
+      "register": "Register",
+      "death": "death",
+      "certified": "Certified",
+      "copies": "copies",
+      "legalHeir": "Legal heir",
+      "certificate": "certificate",
+      "bank": "Bank",
+      "claim": "claim"
+    },
+    "order": {
+      "title": "The order holds up",
+      "body": "Each step lists what it needs and what it produces. The bank claim waits for both the certified copies and the legal heir certificate, so you never queue for it too early."
+    },
+    "docs": {
+      "items": ["Death certificate", "Aadhaar of heirs", "Bank passbook", "Self-attested copy"],
+      "title": "One document list for the whole route",
+      "body": "Whatever one step produces is ticked for you when you finish it. What is left is what you still have to collect."
+    },
+    "deadlines": {
+      "days": "7",
+      "label": "DAYS LEFT",
+      "title": "Deadlines that count down",
+      "body": "A death is registered within 21 days. Paperwork Pilot counts from the date of the event and reminds you before the window closes."
+    },
+    "tipsCard": {
+      "aria": "Sample tips from people who visited the office",
+      "tips": [
+        {
+          "text": "Bring one self-attested photocopy with the original. This counter keeps the copy.",
+          "from": "Ward office · sample tip"
+        },
+        {
+          "text": "Go after 2 pm. The morning token queue is the longest.",
+          "from": "Nadakacheri · sample tip"
+        },
+        {
+          "text": "Ask for the acknowledgement slip before you leave. You need it to track the file.",
+          "from": "Any counter · sample tip"
+        }
+      ],
+      "title": "Tips from people who stood in that queue",
+      "body": "Short notes per office, moderated and dated, and easy to flag when they go stale."
+    }
+  },
+  "pros": {
+    "kicker": "For professionals",
+    "title": "Every client's paperwork on one screen.",
+    "body": "Chartered accountants, lawyers and HR teams repeat the same routes every week. The Pro plan tracks each client against the route, flags missing documents and keeps fees and forms current so you do not have to.",
+    "roles": [
+      {
+        "who": "CAs and lawyers",
+        "what": "Run succession, registration and licensing cases with a shareable checklist per client."
+      },
+      {
+        "who": "HR and relocation teams",
+        "what": "Move people into a new city with the same route every time."
+      },
+      {
+        "who": "Banks and estate services",
+        "what": "Offer the route to customers going through a bereavement."
+      }
+    ],
+    "filterAria": "Filter clients",
+    "filterAll": "All clients",
+    "filterAttention": "Needs attention",
+    "clients_one": "{{count}} client",
+    "clients_other": "{{count}} clients",
+    "next": "Next",
+    "stepsOf": "{{done}} of {{total}} steps",
+    "caption": "Pro plan preview. Sample data.",
+    "pill": {
+      "ok": "On track",
+      "wait": "Needs document",
+      "alert": "Overdue"
+    },
+    "rows": [
+      {
+        "name": "Estate · Sample case A",
+        "kind": "Parent's death",
+        "done": 4,
+        "next": "Bank and insurance claims",
+        "tone": "ok"
+      },
+      {
+        "name": "Relocation · Sample employee B",
+        "kind": "Moving with a toddler",
+        "done": 2,
+        "next": "Electricity connection",
+        "tone": "wait"
+      },
+      {
+        "name": "Estate · Sample case C",
+        "kind": "Parent's death",
+        "done": 1,
+        "next": "Register the death, due 2 days ago",
+        "tone": "alert"
+      },
+      {
+        "name": "New business · Sample client D",
+        "kind": "Small business",
+        "done": 5,
+        "next": "Open the current account",
+        "tone": "ok"
+      },
+      {
+        "name": "Relocation · Sample employee E",
+        "kind": "Moving with a toddler",
+        "done": 3,
+        "next": "Child's Aadhaar address update",
+        "tone": "wait"
+      }
+    ],
+    "openDashboard": "Open the dashboard"
+  },
+  "final": {
+    "kicker": "Start with one situation",
+    "title": "The next form should not be a surprise.",
+    "body": "Pick what is happening and see the route for it, step by step, with the documents to carry and the counter that comes first.",
+    "plot": "Plot a route",
+    "seePros": "See the professional view"
+  },
+  "casePage": {
+    "title": "Your route",
+    "noAccessTitle": "This case is saved on another device",
+    "noAccessBody": "For your privacy a case can only be opened in the browser that created it. Open it there, or start a new route here.",
+    "startNew": "Start a new route",
+    "notFoundTitle": "We could not find this case",
+    "notFoundBody": "It may have been deleted, or the link may be wrong.",
+    "backToDemo": "Back to the start",
+    "deviceNote": "This case is saved only in this browser. Clearing site data removes access to it.",
+    "settingsTitle": "Reminders and privacy",
+    "remindLabel": "Email me a reminder 3 days before a deadline",
+    "remindNeedsDate": "Add the date at the top of this page so we know when your deadlines fall.",
+    "emailLabel": "Email address",
+    "emailHint": "Used only for reminders about this case. Turn reminders off and we forget it.",
+    "consoleNote": "Email sending is not connected yet, so reminders are only written to the server log.",
+    "remindersSaved": "Reminder settings saved.",
+    "remindersOff": "Reminders are off.",
+    "unsubscribeNote": "Every reminder has an unsubscribe link.",
+    "deleteTitle": "Delete this case",
+    "deleteBody": "Removes this case, your progress and any email address from our servers.",
+    "deleteConfirm": "Delete this case for good? This cannot be undone.",
+    "deleted": "Case deleted."
+  }
+}

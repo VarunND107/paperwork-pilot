@@ -1,0 +1,71 @@
+/* Ported verbatim from design/landing-page.html (lines 7-77). Do not restyle: see CLAUDE.md. */
+/* Layout concept: the whole page is one route. Sections are stations on a line, the demo board is the line map, and a rubber stamp thunks onto every finished step. */
+:root {
+  --ground: #e6ecf0;
+  --surface: #f7f9fb;
+  --surface-2: #d8e1e8;
+  --ink: #0e1a2d;
+  --ink-2: #435069;
+  --rule: #bcc8d3;
+  --accent: #5a2a9a;
+  --on-accent: #ffffff;
+  --accent-soft: #e3d9f2;
+  --ok: #14703f;
+  --ok-soft: #d3ead9;
+  --wait: #8a5a00;
+  --wait-soft: #f4e4be;
+  --alert: #b02e1c;
+  --alert-soft: #f5d6cf;
+  --board-bg: #0b1322;
+  --board-fg: #ffc247;
+  --board-dim: #93a0b8;
+  --board-line: #26344e;
+  --f-display: 'Archivo', 'Arial Narrow', Arial, sans-serif;
+  --f-body: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --gutter: clamp(16px, 4vw, 40px);
+  --maxw: 1120px;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --ground: #0a111e;
+    --surface: #111b2d;
+    --surface-2: #1b2840;
+    --ink: #e8eef7;
+    --ink-2: #a1b1ca;
+    --rule: #2a3a55;
+    --accent: #b9a0f5;
+    --on-accent: #150a29;
+    --accent-soft: #2b2048;
+    --ok: #5ed394;
+    --ok-soft: #12302a;
+    --wait: #e8b955;
+    --wait-soft: #3a2d12;
+    --alert: #ff9482;
+    --alert-soft: #3d1b16;
+    --board-bg: #060b16;
+    --board-line: #2a3a55;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --ground: #0a111e;
+  --surface: #111b2d;
+  --surface-2: #1b2840;
+  --ink: #e8eef7;
+  --ink-2: #a1b1ca;
+  --rule: #2a3a55;
+  --accent: #b9a0f5;
+  --on-accent: #150a29;
+  --accent-soft: #2b2048;
+  --ok: #5ed394;
+  --ok-soft: #12302a;
+  --wait: #e8b955;
+  --wait-soft: #3a2d12;
+  --alert: #ff9482;
+  --alert-soft: #3d1b16;
+  --board-bg: #060b16;
+  --board-line: #2a3a55;
+  color-scheme: dark;
+}

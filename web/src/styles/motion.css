@@ -1,0 +1,174 @@
+/* Ported verbatim from design/landing-page.html (lines 397-421). Do not restyle: see CLAUDE.md. */
+/* keyframes */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.42em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes draw {
+  from {
+    background-size: 0 0.13em;
+  }
+  to {
+    background-size: 100% 0.13em;
+  }
+}
+@keyframes stn-in {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ping {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+@keyframes bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.28);
+  }
+}
+@keyframes detail-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes slam {
+  0% {
+    opacity: 0;
+    transform: rotate(-9deg) scale(2.5);
+  }
+  60% {
+    opacity: 1;
+    transform: rotate(-9deg) scale(0.93);
+  }
+  100% {
+    opacity: 0.9;
+    transform: rotate(-9deg) scale(1);
+  }
+}
+@keyframes thud {
+  0%,
+  100% {
+    transform: none;
+  }
+  35% {
+    transform: translateY(3px);
+  }
+}
+@keyframes blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+@keyframes flip {
+  from {
+    opacity: 0.2;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: -15;
+  }
+}
+@keyframes tickmark {
+  0%,
+  6% {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.3);
+  }
+  12%,
+  80% {
+    opacity: 1;
+    transform: rotate(-45deg) scale(1);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.3);
+  }
+}
+@keyframes ringfill {
+  from {
+    stroke-dashoffset: 301.6;
+  }
+}
+@keyframes grow {
+  from {
+    width: 0;
+  }
+}
+@keyframes tipcycle {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  4%,
+  30% {
+    opacity: 1;
+    transform: none;
+  }
+  34%,
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .rv-hide {
+    opacity: 1;
+    transform: none;
+  }
+  .tipstack {
+    display: grid;
+    gap: 10px;
+    min-height: 0;
+  }
+  .tipcard {
+    position: static;
+    opacity: 1;
+    transform: none;
+  }
+  .stn.next .node::after {
+    display: none;
+  }
+}

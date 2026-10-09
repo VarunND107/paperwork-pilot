@@ -1,0 +1,168 @@
+/* Ported verbatim from design/landing-page.html (lines 140-189). Do not restyle: see CLAUDE.md. */
+/* hero */
+.hero {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-block: clamp(36px, 7vw, 84px) clamp(32px, 5vw, 56px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+@media (min-width: 960px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) 270px;
+    align-items: start;
+  }
+}
+.h1 {
+  font-weight: 800;
+  font-size: clamp(2.45rem, 6.3vw, 4.9rem);
+  line-height: 0.98;
+  font-stretch: 118%;
+  letter-spacing: -0.025em;
+  margin-block: 18px 22px;
+}
+.w {
+  display: inline-block;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--k) * 70ms);
+}
+.mark {
+  background: linear-gradient(var(--accent), var(--accent)) no-repeat 0 94%/100% 0.13em;
+  animation: draw 0.9s 0.55s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+  padding-bottom: 0.04em;
+}
+.lede {
+  font-size: clamp(1.05rem, 1.6vw, 1.24rem);
+  max-width: 56ch;
+  color: var(--ink-2);
+}
+.intake {
+  margin-top: 30px;
+  max-width: 660px;
+}
+.intake-label {
+  display: block;
+  margin-bottom: 9px;
+}
+.intake-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+#sit {
+  flex: 1 1 280px;
+  min-width: 0;
+  font: 500 1.08rem/1.2 var(--f-body);
+  padding: 1rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--ink);
+}
+#sit::placeholder {
+  color: var(--ink-2);
+  opacity: 1;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.chip {
+  font: 500 0.9rem/1.1 var(--f-body);
+  padding: 0.62rem 0.9rem;
+  border: 1.5px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.15s;
+}
+.chip:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.chip[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.status {
+  min-height: 1.5em;
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+}
+
+/* queue token display */
+.token {
+  display: none;
+  background: var(--board-bg);
+  color: var(--board-fg);
+  border-radius: 10px;
+  padding: 18px 18px 16px;
+  font-family: var(--f-mono);
+  border: 2px solid var(--board-line);
+  box-shadow:
+    0 0 0 4px var(--ground),
+    0 0 0 6px var(--ink);
+  margin-top: 28px;
+}
+@media (min-width: 960px) {
+  .token {
+    display: block;
+  }
+}
+.tk-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: var(--board-dim);
+}
+.tk-live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--board-fg);
+  animation: blink 1.4s steps(2, jump-none) infinite;
+}
+.tk-num {
+  font-size: 4.6rem;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 10px 0 12px;
+  text-shadow: 0 0 18px rgba(255, 194, 71, 0.35);
+}
+.tk-num.tick {
+  animation: flip 0.45s ease both;
+}
+.tk-you {
+  color: var(--board-fg);
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+}
+.tk-msg {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--board-line);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--board-fg);
+}
+.tk-msg.go {
+  animation: blink 0.7s steps(2, jump-none) infinite;
+}
+.tk-foot {
+  margin-top: 12px;
+  font: 400 0.78rem/1.45 var(--f-body);
+  color: var(--board-dim);
+}

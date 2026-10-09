@@ -1,0 +1,454 @@
+/*
+ * Additions beyond the approved landing page (design/landing-page.html).
+ * Everything here is built ONLY from the design's own tokens (colours, type, radius, spacing) for
+ * UI the product needs that the one-page design did not: forms, the event-date control, the
+ * source/verification note, the case page, the admin panel and the Pro dashboard.
+ * Never override rules from the ported files; add new classes.
+ */
+
+/* Page chrome that the design's host page supplied */
+:root {
+  color-scheme: light;
+}
+body {
+  margin: 0;
+}
+[hidden] {
+  display: none !important;
+}
+img {
+  max-width: 100%;
+}
+main:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--ground);
+  padding: 0.7rem 1rem;
+  border-radius: var(--r);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+/* Generic pages (case page, 404, admin, pro) */
+.page {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-block: clamp(28px, 5vw, 56px) 0;
+  display: grid;
+  gap: 22px;
+}
+.page > .board,
+.page > .panel {
+  width: 100%;
+}
+.page-h1 {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: 112%;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.page .lede {
+  margin-top: 4px;
+}
+.page-loading {
+  max-width: var(--maxw);
+  margin: 40px auto;
+  color: var(--ink-2);
+}
+
+/* Event date on the route board */
+.board-date {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 14px;
+}
+.board-date input[type='date'],
+.input {
+  font: 500 0.95rem/1.2 var(--f-body);
+  padding: 0.6rem 0.75rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--ink);
+  min-width: 0;
+}
+.input {
+  width: 100%;
+  max-width: 420px;
+}
+textarea.input {
+  line-height: 1.45;
+  resize: vertical;
+  max-width: 560px;
+  min-height: 5.5rem;
+}
+select.input {
+  max-width: 420px;
+}
+.hint {
+  font-size: 0.84rem;
+  color: var(--ink-2);
+}
+.board-error {
+  margin-top: 18px;
+  border: 1.5px solid var(--alert);
+  background: var(--alert-soft);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+}
+.board-error p {
+  margin: 0;
+  flex: 1 1 240px;
+}
+
+/* Step detail additions */
+.d-deadline {
+  display: block;
+  margin-top: 4px;
+  font: 500 0.76rem/1.3 var(--f-mono);
+  color: var(--ink-2);
+}
+.d-deadline[data-state='overdue'] {
+  color: var(--alert);
+}
+.d-deadline[data-state='due_soon'] {
+  color: var(--wait);
+}
+.tip + .tip {
+  margin-top: 10px;
+}
+.tip-flags {
+  font: 500 0.72rem/1.3 var(--f-mono);
+  color: var(--ink-2);
+}
+.tip .link {
+  margin-top: 6px;
+}
+.d-source {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+  display: grid;
+  gap: 4px;
+  font-size: 0.86rem;
+}
+.d-source p {
+  margin: 0;
+}
+.d-source.is-unverified .d-source-status {
+  color: var(--wait);
+  font-weight: 600;
+}
+.d-source.is-stale .d-source-status {
+  color: var(--alert);
+  font-weight: 600;
+}
+.d-source a {
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+/* Forms */
+.field {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+}
+.field > label,
+.field-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.check {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  margin-top: 6px;
+}
+.check input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  margin: 1px 0 0;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  background: var(--surface);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+.check input::after {
+  content: '';
+  width: 11px;
+  height: 6px;
+  border-left: 3px solid var(--on-accent);
+  border-bottom: 3px solid var(--on-accent);
+  transform: rotate(-45deg) scale(0);
+  margin-top: -2px;
+  transition: transform 0.18s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.check input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.check input:checked::after {
+  transform: rotate(-45deg) scale(1);
+}
+.check label {
+  cursor: pointer;
+  line-height: 1.35;
+}
+.form-msg {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ok);
+}
+.form-msg.is-error {
+  color: var(--alert);
+}
+.form-msg:empty {
+  display: none;
+}
+
+/* Panels (case page settings, admin forms) */
+.panel {
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: var(--r);
+  padding: clamp(16px, 3vw, 28px);
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  min-width: 0;
+}
+.panel-title,
+.panel h2 {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: 108%;
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+.panel h3 {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.panel p {
+  margin: 0;
+}
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 16px;
+}
+.panel-danger {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--rule);
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+
+/* Small status pills reused by admin and pro */
+.tag {
+  display: inline-block;
+  font: 600 0.66rem/1 var(--f-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.55rem;
+  border-radius: 3px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.tag.ok {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.tag.wait {
+  background: var(--wait-soft);
+  color: var(--wait);
+}
+.tag.alert {
+  background: var(--alert-soft);
+  color: var(--alert);
+}
+
+/* Admin panel */
+.admin-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px 20px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 12px;
+}
+.admin-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.admin-nav a {
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ink-2);
+  padding: 0.4rem 0;
+  border-bottom: 3px solid transparent;
+}
+.admin-nav a[aria-current='page'] {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+.admin-nav a:hover {
+  color: var(--ink);
+}
+.table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.table caption {
+  text-align: left;
+  padding-bottom: 8px;
+}
+.table th,
+.table td {
+  text-align: left;
+  padding: 10px 12px 10px 0;
+  border-top: 1px dashed var(--rule);
+  vertical-align: top;
+}
+.table thead th {
+  font: 500 0.66rem/1 var(--f-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  border-top: 0;
+}
+.table td .tag + .tag {
+  margin-left: 6px;
+}
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.form-grid {
+  display: grid;
+  gap: 4px 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.error-box {
+  border: 1.5px solid var(--alert);
+  background: var(--alert-soft);
+  border-radius: var(--r);
+  padding: 10px 12px;
+}
+.error-box p + p {
+  margin-top: 6px;
+}
+.ok-box {
+  border: 1.5px solid var(--ok);
+  background: var(--ok-soft);
+  border-radius: var(--r);
+  padding: 10px 12px;
+}
+.stack {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.split {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+@media (min-width: 960px) {
+  .split {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+}
+.doc-rows {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.doc-rows li {
+  display: grid;
+  gap: 8px 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) auto;
+  align-items: end;
+  padding: 10px 0;
+  border-top: 1px dashed var(--rule);
+}
+
+/* Pro dashboard (reuses .dash, .prow, .pill from the design) */
+.pro-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: end;
+  margin-bottom: 14px;
+}
+.pro-toolbar .field {
+  margin-top: 0;
+}
+.prow a.p-link {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+.prow .p-client .tag {
+  justify-self: start;
+  margin-top: 4px;
+}
+.prow-link {
+  font-weight: 600;
+}

@@ -84,8 +84,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
         working-directory: e2e
       - run: npm run db:generate
-      - run: npm run db:deploy
-      - run: npm run db:seed
+      # The database is created, migrated, emptied and seeded by e2e/prepare-db.ts.
       - run: npm run e2e
       - uses: actions/upload-artifact@v4
         if: failure()

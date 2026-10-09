@@ -20,6 +20,7 @@ export function metaRouter(ctx: AppContext): Router {
     res.json({
       proEnabled: ctx.config.proEnabled,
       adminEnabled: ctx.config.adminPassword !== '',
+      emailProvider: ctx.config.emailProvider,
       staleAfterDays: STALE_AFTER_DAYS,
       disclaimer: DISCLAIMER,
     });
