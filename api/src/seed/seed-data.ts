@@ -142,14 +142,11 @@ export const SEED_EVENTS: SeedEvent[] = [
       'last rites',
       'demise',
       'bereav*',
-      'late father',
-      'late mother',
-      'mother',
-      'father',
+      'mother*',
+      'father*',
+      'parent*',
       'mom',
       'dad',
-      'parent',
-      'parents',
     ],
     steps: [
       {

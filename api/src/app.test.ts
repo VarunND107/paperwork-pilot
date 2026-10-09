@@ -1,30 +1,50 @@
 import request from 'supertest';
-import { describe, expect, it } from 'vitest';
-import { createApp } from './app.js';
+import { afterAll, describe, expect, it } from 'vitest';
 import { loadConfig } from './config.js';
+import { createTestApp } from './test/appKit.js';
 
-const config = loadConfig({ NODE_ENV: 'test', DATABASE_URL: 'postgresql://unused' });
+const t = createTestApp();
+afterAll(async () => {
+  await t.close();
+});
 
 describe('app skeleton', () => {
-  it('answers the health check', async () => {
-    const res = await request(createApp(config)).get('/health');
+  it('answers the health check, including a database ping', async () => {
+    const res = await request(t.app).get('/health');
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ status: 'ok', env: 'test' });
   });
 
+  it('exposes the feature flags the web app needs', async () => {
+    const res = await request(t.app).get('/config');
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({
+      proEnabled: true,
+      adminEnabled: true,
+      staleAfterDays: 90,
+      disclaimer: 'Guidance, not legal advice.',
+    });
+  });
+
   it('returns a JSON 404 for unknown routes', async () => {
-    const res = await request(createApp(config)).get('/nope');
+    const res = await request(t.app).get('/nope');
     expect(res.status).toBe(404);
     expect(res.body.error.code).toBe('not_found');
   });
 
   it('rejects malformed JSON with a clear 400', async () => {
-    const res = await request(createApp(config))
-      .post('/health')
+    const res = await request(t.app)
+      .post('/match')
       .set('Content-Type', 'application/json')
       .send('{not json');
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe('invalid_json');
+  });
+
+  it('sets security headers and hides the framework', async () => {
+    const res = await request(t.app).get('/health');
+    expect(res.headers['x-powered-by']).toBeUndefined();
+    expect(res.headers['x-content-type-options']).toBe('nosniff');
   });
 });
 
