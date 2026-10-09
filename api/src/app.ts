@@ -4,6 +4,7 @@ import type { Config } from './config.js';
 import type { Db } from './db.js';
 import { errorHandler, notFoundHandler } from './errors.js';
 import { createLimiters, DEFAULT_LIMITS, type RateLimits } from './http/limits.js';
+import { adminRouter } from './routes/admin.js';
 import { casesRouter } from './routes/cases.js';
 import type { AppContext } from './routes/context.js';
 import { eventsRouter } from './routes/events.js';
@@ -48,6 +49,7 @@ export function createApp(deps: AppDeps): Express {
   app.use(eventsRouter(ctx));
   app.use(matchRouter(ctx));
   app.use(casesRouter(ctx));
+  app.use(adminRouter(ctx));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

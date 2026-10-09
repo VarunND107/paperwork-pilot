@@ -172,6 +172,8 @@ select.input {
   display: grid;
   gap: 6px;
   margin-top: 14px;
+  align-content: start;
+  min-width: 0;
 }
 .field > label,
 .field-label {
@@ -233,6 +235,20 @@ select.input {
 }
 .form-msg:empty {
   display: none;
+}
+
+/* Grouped controls inside a panel */
+fieldset.panel-prov {
+  border: 1.5px dashed var(--rule);
+  border-radius: var(--r);
+  padding: 12px 14px 14px;
+  margin: 0;
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+fieldset.panel-prov legend {
+  padding: 0 6px;
 }
 
 /* Panels (case page settings, admin forms) */
@@ -422,12 +438,16 @@ select.input {
   margin: 0;
 }
 .doc-rows li {
-  display: grid;
-  gap: 8px 10px;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) auto;
-  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: flex-end;
   padding: 10px 0;
   border-top: 1px dashed var(--rule);
+}
+.doc-rows .field {
+  margin-top: 0;
+  flex: 1 1 190px;
 }
 
 /* Pro dashboard (reuses .dash, .prow, .pill from the design) */

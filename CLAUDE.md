@@ -84,12 +84,26 @@ Tests must pass before every commit. Commit messages start with the phase, for e
 
 - Plain CSS in `web/src/styles/`. Colour tokens, type scale and animations are ported verbatim from
   the landing page. Both themes (`prefers-color-scheme` and `data-theme`) must keep working.
-- All user-facing copy goes through `t()` (react-i18next). Only `en` is filled in; `hi` and `kn`
-  are empty scaffolds that fall back to English.
+- All public copy goes through `t()` (react-i18next). Only `en` is filled in; `hi` and `kn` are
+  empty scaffolds that fall back to English. The staff-only admin screens (`web/src/admin`) are
+  English-only for now and use plain strings; `src/i18n/i18n.test.ts` checks every `t('...')` key
+  exists.
 - Motion: every animation needs a `prefers-reduced-motion` fallback (the CSS block at the end of
   `base.css` handles most; JS-driven motion checks `useReducedMotion()`).
 - Interactive elements are real `<button>` / `<a>` / `<input>` with visible `:focus-visible`.
 - Announce state changes (step done, undone, reset, saved) through the shared `aria-live` region.
+
+## Admin panel (`/admin`)
+
+- Off unless `ADMIN_PASSWORD` is set. Sign-in sets an HMAC-signed httpOnly `SameSite=Strict`
+  cookie (12 h); writes are also refused when the `Origin` header names another site.
+- **Every write carries `sourceUrl`** (http/https only, validated by zod) and the server stamps
+  `lastVerifiedAt = now`. `verified` is only ever true when the editor ticked "I checked this
+  against the source"; editing never verifies by accident.
+- Changes are applied inside a transaction and the **resulting route is validated** (no cycles, and
+  every document a step needs must be producible by a step it waits for). A bad save throws and
+  rolls back: 409 `dependency_cycle` (with the loop's path) or 409 `document_not_upstream`.
+- The stale badge is `isStale()` in `engine/verification.ts`: never verified, or older than 90 days.
 
 ## Data rules
 
