@@ -104,4 +104,7 @@ export const api = {
     call<{ case: CaseView }>(`/cases/${id}/reset`, { method: 'POST', token }).then((r) => r.case),
   deleteCase: (id: string, token: string) =>
     call<undefined>(`/cases/${id}`, { method: 'DELETE', token }),
+  /** The link in a reminder email: proves itself with a signature, so no access token is needed. */
+  unsubscribe: (caseId: string, sig: string) =>
+    call<{ ok: true }>('/reminders/unsubscribe', { method: 'POST', body: { caseId, sig } }),
 };

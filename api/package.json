@@ -18,7 +18,8 @@
     "db:seed": "tsx src/seed/run.ts",
     "db:reset": "prisma migrate reset --force --skip-seed && tsx src/seed/run.ts",
     "pretypecheck": "prisma generate",
-    "pretest": "prisma generate"
+    "pretest": "prisma generate",
+    "reminders:run": "tsx src/reminders/run.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

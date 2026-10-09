@@ -8,6 +8,7 @@ import { RoughFilter } from './components/RoughFilter';
 import { CasePage } from './pages/CasePage';
 import { LandingPage } from './pages/LandingPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { UnsubscribePage } from './pages/UnsubscribePage';
 import { AppDataProvider } from './state/AppData';
 
 // Staff screens load on demand so they never weigh down the public landing page.
@@ -28,6 +29,7 @@ export function App() {
         <Routes>
           <Route index element={<LandingPage />} />
           <Route path="case/:id" element={<CasePage />} />
+          <Route path="unsubscribe" element={<UnsubscribePage />} />
           <Route
             path="admin/*"
             element={

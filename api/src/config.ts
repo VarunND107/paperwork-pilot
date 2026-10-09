@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import cron from 'node-cron';
 import { z } from 'zod';
 
 /** "true" / "1" / "yes" / "on" are true, everything else (including unset) is the default. */
@@ -51,6 +52,9 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     throw new Error(`Invalid environment configuration:\n${lines.join('\n')}`);
   }
   const e = parsed.data;
+  if (e.REMINDERS_ENABLED && !cron.validate(e.REMINDER_CRON)) {
+    throw new Error(`REMINDER_CRON "${e.REMINDER_CRON}" is not a valid cron expression.`);
+  }
   const production = e.NODE_ENV === 'production';
 
   let adminPassword = (e.ADMIN_PASSWORD ?? '').trim();

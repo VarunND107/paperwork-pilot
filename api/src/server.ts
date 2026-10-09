@@ -1,7 +1,9 @@
 import { createApp } from './app.js';
 import { loadConfig } from './config.js';
 import { createPrisma } from './db.js';
+import { createEmailProvider } from './email/provider.js';
 import { loadRootEnv } from './env.js';
+import { REMINDER_TIMEZONE, startReminderScheduler } from './reminders/scheduler.js';
 
 loadRootEnv();
 const config = loadConfig();
@@ -14,8 +16,24 @@ const server = app.listen(config.port, () => {
   if (config.proEnabled) console.info('Professional plan is ON (PRO_ENABLED).');
 });
 
+const reminders = config.remindersEnabled
+  ? startReminderScheduler({
+      prisma,
+      email: createEmailProvider(config.emailProvider),
+      config,
+    })
+  : null;
+if (reminders) {
+  console.info(
+    `Reminders scheduled: "${config.reminderCron}" (${REMINDER_TIMEZONE}), email provider: ${config.emailProvider}`,
+  );
+} else {
+  console.info('Reminders are off (REMINDERS_ENABLED=false).');
+}
+
 function shutdown(signal: string) {
   console.info(`${signal} received, shutting down`);
+  void reminders?.stop();
   server.close(() => {
     void prisma.$disconnect().finally(() => process.exit(0));
   });

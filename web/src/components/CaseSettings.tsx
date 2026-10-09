@@ -99,6 +99,7 @@ export function CaseSettings({ view, session, onView }: Props) {
             {!view.eventDate && <p className="hint">{t('casePage.remindNeedsDate')}</p>}
           </div>
         )}
+        <p className="hint">{t('casePage.unsubscribeNote')}</p>
         {config?.emailProvider === 'console' && <p className="hint">{t('casePage.consoleNote')}</p>}
         <div className="panel-actions">
           <button type="submit" className="btn btn-sm btn-primary" disabled={saving}>

@@ -282,6 +282,19 @@
     "plot": "Plot a route",
     "seePros": "See the professional view"
   },
+  "unsubscribe": {
+    "title": "Stop reminders",
+    "body": "We will stop emailing you about this route and forget your email address. Your route and progress stay as they are.",
+    "button": "Stop reminders",
+    "working": "Stopping reminders…",
+    "doneTitle": "Reminders stopped",
+    "done": "We will not email you about this route again, and your email address has been removed.",
+    "incompleteTitle": "This link is incomplete",
+    "incomplete": "Open the unsubscribe link from the reminder email again, exactly as it was sent.",
+    "failed": "We could not stop the reminders. Try again in a moment.",
+    "badLink": "This unsubscribe link is not valid. Open it again from the email, or turn reminders off on your route page.",
+    "backHome": "Back to the start"
+  },
   "casePage": {
     "title": "Your route",
     "noAccessTitle": "This case is saved on another device",

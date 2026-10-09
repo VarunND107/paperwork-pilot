@@ -9,6 +9,7 @@ import { casesRouter } from './routes/cases.js';
 import type { AppContext } from './routes/context.js';
 import { eventsRouter } from './routes/events.js';
 import { matchRouter } from './routes/match.js';
+import { remindersRouter } from './routes/reminders.js';
 import { metaRouter } from './routes/meta.js';
 
 export interface AppDeps {
@@ -49,6 +50,7 @@ export function createApp(deps: AppDeps): Express {
   app.use(eventsRouter(ctx));
   app.use(matchRouter(ctx));
   app.use(casesRouter(ctx));
+  app.use(remindersRouter(ctx));
   app.use(adminRouter(ctx));
 
   app.use(notFoundHandler);

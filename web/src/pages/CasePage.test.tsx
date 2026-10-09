@@ -110,6 +110,7 @@ describe('CasePage: the full route view', () => {
     expect(email).toHaveAttribute('type', 'email');
     expect(email).toHaveAccessibleDescription(/Used only for reminders about this case/);
     expect(screen.getByText(/reminders are only written to the server log/)).toBeInTheDocument();
+    expect(screen.getByText('Every reminder has an unsubscribe link.')).toBeInTheDocument();
     expect(screen.getByText(/Add the date at the top of this page/)).toBeInTheDocument();
   });
 

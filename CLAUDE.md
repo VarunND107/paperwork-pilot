@@ -105,6 +105,21 @@ Tests must pass before every commit. Commit messages start with the phase, for e
   rolls back: 409 `dependency_cycle` (with the loop's path) or 409 `document_not_upstream`.
 - The stale badge is `isStale()` in `engine/verification.ts`: never verified, or older than 90 days.
 
+## Reminders (`api/src/reminders`)
+
+- A node-cron job (`REMINDER_CRON`, default 09:00 Asia/Kolkata, off when `REMINDERS_ENABLED=false`)
+  emails opted-in cases that have a not-done step due today or within 3 days. One email per case.
+- Email goes through the `EmailProvider` interface (`src/email/provider.ts`). The only
+  implementation is `ConsoleEmailProvider`, which logs the message and sends nothing. A real
+  provider (SMTP, SES, ...) is a new class plus an `EMAIL_PROVIDER` value; nothing else changes.
+- Each (case, step, deadline) is **claimed in `reminder_logs` before sending**; the unique key makes
+  overlapping runs send once, and a failed send releases the claim so the next run retries.
+  Opting out, unsubscribing or deleting the case erases the log (it holds the email address).
+- Every email has an unsubscribe link: `/unsubscribe?case=&sig=` where `sig` is an HMAC of the case
+  id. Opening the link does nothing; the page POSTs `/reminders/unsubscribe`. Links never contain
+  the case access token.
+- Run once by hand: `npm run reminders:run`.
+
 ## Data rules
 
 - Seeded rows: `verified=false`, `lastVerifiedAt=null`. The seeder only creates missing rows and

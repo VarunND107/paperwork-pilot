@@ -131,6 +131,7 @@ export async function updateCaseSettings(
     let email = input.reminderEmail !== undefined ? input.reminderEmail : row.reminderEmail;
     // Opting out forgets the address: we keep no email we have no reason to use.
     if (!optIn) email = null;
+    if (!optIn) await tx.reminderLog.deleteMany({ where: { caseId } });
     if (optIn && !email) {
       throw HttpError.badRequest('email_required', 'Add an email address to get reminders.');
     }
