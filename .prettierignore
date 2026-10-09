@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+playwright-report
+test-results
+api/src/generated
+api/prisma/migrations
+design
+package-lock.json
+*.bat
+.env
+.env.*
+!.env.example

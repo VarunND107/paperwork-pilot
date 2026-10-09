@@ -1,0 +1,68 @@
+name: paperwork-pilot
+
+# One command: docker compose up --build   (or run start.bat / start.sh)
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-paperwork}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Copy .env.example to .env first (start.bat does this)}
+      POSTGRES_DB: ${POSTGRES_DB:-paperwork}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    ports:
+      - '127.0.0.1:${DB_PORT:-5432}:5432'
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: '4000'
+      DATABASE_URL: postgresql://${POSTGRES_USER:-paperwork}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-paperwork}
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8080}
+      SESSION_SECRET: ${SESSION_SECRET:?Copy .env.example to .env first (start.bat does this)}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      PRO_ENABLED: ${PRO_ENABLED:-false}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-console}
+      REMINDERS_ENABLED: ${REMINDERS_ENABLED:-true}
+      REMINDER_CRON: ${REMINDER_CRON:-0 9 * * *}
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:4000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 15s
+    ports:
+      - '127.0.0.1:${API_PORT:-4000}:4000'
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - '${WEB_PORT:-8080}:80'
+
+volumes:
+  pgdata:

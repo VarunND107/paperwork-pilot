@@ -1,0 +1,19 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.vite/
+
+# Generated Prisma client (run `npm run db:generate`)
+api/src/generated/
+
+# Local env. Only .env.example is committed.
+.env
+.env.*
+!.env.example
+
+.DS_Store
+Thumbs.db
+*.log
