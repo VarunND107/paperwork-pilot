@@ -1,0 +1,376 @@
+// Paperwork Pilot data model.
+//
+// Rules that shape this schema:
+//  * Every step has a source_url and a nullable last_verified_at, plus a `verified` flag.
+//    Seeded rows are sample data and are ALWAYS verified = false.
+//  * Order comes from step_dependencies ("step needs step"). It must stay a DAG inside one event;
+//    the engine rejects cycles before anything is saved.
+//  * We never store uploaded documents. case_documents only records "have it / don't have it".
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------------------------
+
+enum DueUnit {
+  DAY
+  WEEK
+  MONTH
+
+  @@map("due_unit")
+}
+
+enum OfficeKind {
+  OFFICE
+  PORTAL
+
+  @@map("office_kind")
+}
+
+/// requires: the step needs this document. produces: finishing the step gives the user this document.
+enum StepDocumentRole {
+  REQUIRES
+  PRODUCES
+
+  @@map("step_document_role")
+}
+
+enum CaseStepStatus {
+  PENDING
+  DONE
+
+  @@map("case_step_status")
+}
+
+enum TipStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@map("tip_status")
+}
+
+enum TipOrigin {
+  SEED
+  USER
+
+  @@map("tip_origin")
+}
+
+enum OrgRole {
+  OWNER
+  MEMBER
+
+  @@map("org_role")
+}
+
+// ---------------------------------------------------------------------------------------------
+// Content: events, steps, dependencies, documents, offices, tips
+// ---------------------------------------------------------------------------------------------
+
+model Event {
+  id             String    @id @default(cuid())
+  /// Stable URL-safe key, for example "death".
+  slug           String    @unique
+  /// "A parent has passed away"
+  label          String
+  place          String    @default("Bengaluru, Karnataka")
+  /// What the event date means for this event, for example "Date of death".
+  eventDateLabel String    @default("Date of the event") @map("event_date_label")
+  /// Lower-case words and phrases used by POST /match.
+  keywords       String[]
+  position       Int       @default(0)
+  sourceUrl      String?   @map("source_url")
+  lastVerifiedAt DateTime? @map("last_verified_at")
+  verified       Boolean   @default(false)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  steps Step[]
+  cases Case[]
+
+  @@map("events")
+}
+
+model Step {
+  id             String    @id @default(cuid())
+  eventId        String    @map("event_id")
+  /// Author order. Used as the tie-break when several steps are ready at once.
+  position       Int
+  title          String
+  form           String
+  /// Free text shown to the user, for example "Ward health office or the state's online portal".
+  whereText      String    @map("where_text")
+  officeId       String?   @map("office_id")
+  fee            String
+  /// "Typical wait", free text.
+  waitText       String    @map("wait_text")
+  /// Deadline wording shown to the user, for example "Within 21 days".
+  dueText        String    @map("due_text")
+  /// Machine-readable deadline counted from the case's event date. Null when it cannot be computed.
+  dueAmount      Int?      @map("due_amount")
+  dueUnit        DueUnit?  @map("due_unit")
+  sourceUrl      String    @map("source_url")
+  lastVerifiedAt DateTime? @map("last_verified_at")
+  verified       Boolean   @default(false)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  event       Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  office      Office?          @relation(fields: [officeId], references: [id], onDelete: SetNull)
+  /// Rows where this step is the one that needs something.
+  needs       StepDependency[] @relation("StepNeeds")
+  /// Rows where another step needs this one.
+  neededBy    StepDependency[] @relation("StepNeededBy")
+  documents   StepDocument[]   @relation("StepDocuments")
+  /// requires-rows on other steps that point at this step as the producer.
+  producedFor StepDocument[]   @relation("ProducedBy")
+  tips        Tip[]
+  caseSteps   CaseStep[]
+
+  @@index([eventId, position])
+  @@index([officeId])
+  @@map("steps")
+}
+
+/// "step needs step". Both ends must belong to the same event (enforced in the service layer).
+model StepDependency {
+  stepId      String @map("step_id")
+  dependsOnId String @map("depends_on_step_id")
+
+  step      Step @relation("StepNeeds", fields: [stepId], references: [id], onDelete: Cascade)
+  dependsOn Step @relation("StepNeededBy", fields: [dependsOnId], references: [id], onDelete: Cascade)
+
+  @@id([stepId, dependsOnId])
+  @@index([dependsOnId])
+  @@map("step_dependencies")
+}
+
+model Document {
+  id             String    @id @default(cuid())
+  name           String    @unique
+  description    String?
+  sourceUrl      String?   @map("source_url")
+  lastVerifiedAt DateTime? @map("last_verified_at")
+  verified       Boolean   @default(false)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  stepDocuments StepDocument[]
+  caseDocuments CaseDocument[]
+
+  @@map("documents")
+}
+
+model StepDocument {
+  id               String           @id @default(cuid())
+  stepId           String           @map("step_id")
+  documentId       String           @map("document_id")
+  role             StepDocumentRole
+  /// For a requires-row: the step whose completion hands the user this document.
+  producedByStepId String?          @map("produced_by_step_id")
+  /// Optional wording for this step, for example "Address proof (rental agreement)".
+  label            String?
+  position         Int              @default(0)
+
+  step           Step     @relation("StepDocuments", fields: [stepId], references: [id], onDelete: Cascade)
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  producedByStep Step?    @relation("ProducedBy", fields: [producedByStepId], references: [id], onDelete: SetNull)
+
+  @@unique([stepId, documentId, role])
+  @@index([documentId])
+  @@index([producedByStepId])
+  @@map("step_documents")
+}
+
+model Office {
+  id             String     @id @default(cuid())
+  name           String
+  kind           OfficeKind @default(OFFICE)
+  city           String     @default("Bengaluru")
+  address        String?
+  /// Website or portal address.
+  url            String?
+  hours          String?
+  sourceUrl      String?    @map("source_url")
+  lastVerifiedAt DateTime?  @map("last_verified_at")
+  verified       Boolean    @default(false)
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  steps Step[]
+  tips  Tip[]
+
+  @@unique([name, city])
+  @@map("offices")
+}
+
+/// A short tip about one step or one office. Tips are moderated before anyone sees them.
+/// Exactly one of step_id / office_id is set (CHECK constraint in the migration).
+model Tip {
+  id          String    @id @default(cuid())
+  stepId      String?   @map("step_id")
+  officeId    String?   @map("office_id")
+  body        String
+  status      TipStatus @default(PENDING)
+  origin      TipOrigin @default(USER)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  moderatedAt DateTime? @map("moderated_at")
+
+  step   Step?     @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  office Office?   @relation(fields: [officeId], references: [id], onDelete: Cascade)
+  flags  TipFlag[]
+
+  @@index([status, createdAt])
+  @@index([stepId, status])
+  @@index([officeId, status])
+  @@map("tips")
+}
+
+/// One "this tip looks out of date" vote. voter_hash is a hash of an anonymous browser id.
+model TipFlag {
+  id        String   @id @default(cuid())
+  tipId     String   @map("tip_id")
+  voterHash String   @map("voter_hash")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tip Tip @relation(fields: [tipId], references: [id], onDelete: Cascade)
+
+  @@unique([tipId, voterHash])
+  @@map("tip_flags")
+}
+
+// ---------------------------------------------------------------------------------------------
+// People and cases
+// ---------------------------------------------------------------------------------------------
+
+/// Placeholder for email magic-link login (later). Anonymous cases have no user.
+model User {
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cases       Case[]
+  memberships OrgMember[]
+
+  @@map("users")
+}
+
+model Case {
+  id             String    @id @default(cuid())
+  eventId        String    @map("event_id")
+  userId         String?   @map("user_id")
+  orgId          String?   @map("org_id")
+  /// Professional plan: how the professional labels this client.
+  clientName     String?   @map("client_name")
+  /// SHA-256 of the secret access token. The token itself lives only in the owner's browser.
+  tokenHash      String    @unique @map("token_hash")
+  startedAt      DateTime  @default(now()) @map("started_at")
+  /// Calendar date of the event (date of death, move-in date, ...). Null until the user enters it.
+  eventDate      DateTime? @map("event_date") @db.Date
+  remindersOptIn Boolean   @default(false) @map("reminders_opt_in")
+  reminderEmail  String?   @map("reminder_email")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  event        Event          @relation(fields: [eventId], references: [id], onDelete: Restrict)
+  user         User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  org          Organization?  @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  steps        CaseStep[]
+  documents    CaseDocument[]
+  reminderLogs ReminderLog[]
+
+  @@index([eventId])
+  @@index([orgId])
+  @@index([remindersOptIn])
+  @@map("cases")
+}
+
+model CaseStep {
+  id     String         @id @default(cuid())
+  caseId String         @map("case_id")
+  stepId String         @map("step_id")
+  status CaseStepStatus @default(PENDING)
+  doneAt DateTime?      @map("done_at")
+
+  case Case @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  step Step @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@unique([caseId, stepId])
+  @@index([stepId])
+  @@map("case_steps")
+}
+
+/// "I have this document." Never the document itself.
+model CaseDocument {
+  id         String    @id @default(cuid())
+  caseId     String    @map("case_id")
+  documentId String    @map("document_id")
+  ticked     Boolean   @default(false)
+  tickedAt   DateTime? @map("ticked_at")
+
+  case     Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([caseId, documentId])
+  @@index([documentId])
+  @@map("case_documents")
+}
+
+/// One row per reminder that was sent, so a step is never reminded twice for the same due date.
+model ReminderLog {
+  id      String   @id @default(cuid())
+  caseId  String   @map("case_id")
+  stepId  String   @map("step_id")
+  dueDate DateTime @map("due_date") @db.Date
+  email   String
+  sentAt  DateTime @default(now()) @map("sent_at")
+
+  case Case @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@unique([caseId, stepId, dueDate])
+  @@map("reminder_logs")
+}
+
+// ---------------------------------------------------------------------------------------------
+// Professional plan (PRO_ENABLED)
+// ---------------------------------------------------------------------------------------------
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  members OrgMember[]
+  cases   Case[]
+
+  @@map("organizations")
+}
+
+model OrgMember {
+  id        String   @id @default(cuid())
+  orgId     String   @map("org_id")
+  userId    String?  @map("user_id")
+  email     String
+  name      String
+  role      OrgRole  @default(MEMBER)
+  /// SHA-256 of the member's access token (interim, until email magic-link login exists).
+  tokenHash String   @unique @map("token_hash")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  org  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([orgId, email])
+  @@map("org_members")
+}

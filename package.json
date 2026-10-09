@@ -26,7 +26,9 @@
     "db:deploy": "npm run db:deploy -w api",
     "db:seed": "npm run db:seed -w api",
     "db:reset": "npm run db:reset -w api",
-    "check": "npm run lint && npm run format:check && npm run typecheck && npm test"
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm test",
+    "prelint": "npm run db:generate",
+    "setup": "npm install && npm run db:generate && npm run db:deploy && npm run db:seed"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
