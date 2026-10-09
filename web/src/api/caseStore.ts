@@ -7,6 +7,7 @@
 const CASES_KEY = 'pp:cases'; // { [caseId]: token }
 const DEMO_KEY = 'pp:demo'; // { [eventSlug]: caseId }
 const VOTER_KEY = 'pp:voter';
+const MEMBER_KEY = 'pp:member'; // professional plan access key
 const FLAGGED_KEY = 'pp:flagged-tips'; // [tipId]
 
 /** Holds only what localStorage refused to keep (blocked or full), never a shadow copy. */
@@ -77,6 +78,21 @@ export const caseStore = {
   /** Every case saved in this browser, newest-saved last. */
   caseIds(): string[] {
     return Object.keys(readMap(CASES_KEY));
+  },
+  /** The professional plan's access key for this browser, if someone signed in. */
+  memberKey(): string | null {
+    return read(MEMBER_KEY);
+  },
+  setMemberKey(key: string): void {
+    write(MEMBER_KEY, key);
+  },
+  forgetMemberKey(): void {
+    try {
+      window.localStorage.removeItem(MEMBER_KEY);
+    } catch {
+      /* blocked: fall through to memory */
+    }
+    memory.delete(MEMBER_KEY);
   },
   /** Tips this browser has already flagged, so the button can say so after a reload. */
   flaggedTips(): string[] {

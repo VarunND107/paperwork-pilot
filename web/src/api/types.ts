@@ -112,3 +112,53 @@ export interface AppConfig {
   disclaimer: string;
   emailProvider: string;
 }
+
+// ---- professional plan ---------------------------------------------------------------------
+
+export type HealthStatus = 'on_track' | 'needs_document' | 'overdue';
+
+export interface MemberView {
+  id: string;
+  name: string;
+  email: string;
+  role: 'OWNER' | 'MEMBER';
+  createdAt: string;
+}
+
+export interface OrgView {
+  id: string;
+  name: string;
+}
+
+export interface ClientRow {
+  id: string;
+  clientName: string;
+  event: { id: string; slug: string; label: string };
+  eventDate: DateOnly | null;
+  startedAt: string;
+  progress: { done: number; total: number };
+  status: HealthStatus;
+  next: {
+    id: string;
+    number: number;
+    title: string;
+    deadline: DateOnly | null;
+    daysLeft: number | null;
+  } | null;
+  missingDocuments: string[];
+  overdueSteps: number;
+}
+
+export interface ClientList {
+  clients: ClientRow[];
+  counts: { all: number; onTrack: number; needsDocument: number; overdue: number };
+  total: number;
+  truncated: boolean;
+}
+
+export interface ClientFilters {
+  filter?: 'all' | 'attention';
+  status?: HealthStatus;
+  event?: string;
+  q?: string;
+}

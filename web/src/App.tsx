@@ -13,6 +13,7 @@ import { AppDataProvider } from './state/AppData';
 
 // Staff screens load on demand so they never weigh down the public landing page.
 const AdminApp = lazy(() => import('./admin/AdminApp'));
+const ProApp = lazy(() => import('./pro/ProApp'));
 
 /** The app shell. A router (BrowserRouter in the browser, MemoryRouter in tests) goes above it. */
 export function App() {
@@ -41,6 +42,20 @@ export function App() {
                 }
               >
                 <AdminApp />
+              </Suspense>
+            }
+          />
+          <Route
+            path="pro/*"
+            element={
+              <Suspense
+                fallback={
+                  <p className="page-loading" role="status">
+                    {t('app.loading')}
+                  </p>
+                }
+              >
+                <ProApp />
               </Suspense>
             }
           />

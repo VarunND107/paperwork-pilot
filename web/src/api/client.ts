@@ -1,6 +1,11 @@
 import type {
   AppConfig,
   CaseView,
+  ClientFilters,
+  ClientList,
+  ClientRow,
+  MemberView,
+  OrgView,
   DateOnly,
   EventSummary,
   MatchResponse,
@@ -120,4 +125,51 @@ export const api = {
   /** The link in a reminder email: proves itself with a signature, so no access token is needed. */
   unsubscribe: (caseId: string, sig: string) =>
     call<{ ok: true }>('/reminders/unsubscribe', { method: 'POST', body: { caseId, sig } }),
+};
+
+/** The professional plan. Every call carries the member's access key. */
+export const proApi = {
+  signUp: (body: { orgName: string; name: string; email: string }) =>
+    call<{ token: string; org: OrgView; member: MemberView }>('/pro/orgs', {
+      method: 'POST',
+      body,
+    }),
+  me: (key: string, signal?: AbortSignal) =>
+    call<{ member: MemberView; org: OrgView }>('/pro/me', { token: key, signal }),
+  rotateKey: (key: string) =>
+    call<{ token: string }>('/pro/me/rotate-key', { method: 'POST', token: key }),
+  clients: (key: string, filters: ClientFilters = {}, signal?: AbortSignal) => {
+    const query = new URLSearchParams();
+    for (const name of ['filter', 'status', 'event', 'q'] as const) {
+      const value = filters[name];
+      if (value) query.set(name, value);
+    }
+    const qs = query.toString();
+    return call<ClientList>(`/pro/clients${qs ? `?${qs}` : ''}`, { token: key, signal });
+  },
+  client: (key: string, id: string, signal?: AbortSignal) =>
+    call<{ client: ClientRow }>(`/pro/clients/${id}`, { token: key, signal }).then((r) => r.client),
+  addClient: (
+    key: string,
+    body: { clientName: string; eventId: string; eventDate?: string | null },
+  ) =>
+    call<{ client: ClientRow }>('/pro/clients', { method: 'POST', token: key, body }).then(
+      (r) => r.client,
+    ),
+  renameClient: (key: string, id: string, clientName: string) =>
+    call<{ client: ClientRow }>(`/pro/clients/${id}`, {
+      method: 'PATCH',
+      token: key,
+      body: { clientName },
+    }).then((r) => r.client),
+  members: (key: string, signal?: AbortSignal) =>
+    call<{ members: MemberView[] }>('/pro/members', { token: key, signal }).then((r) => r.members),
+  addMember: (key: string, body: { name: string; email: string }) =>
+    call<{ token: string; member: MemberView }>('/pro/members', {
+      method: 'POST',
+      token: key,
+      body,
+    }),
+  removeMember: (key: string, id: string) =>
+    call<undefined>(`/pro/members/${id}`, { method: 'DELETE', token: key }),
 };

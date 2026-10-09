@@ -9,6 +9,7 @@ import { casesRouter } from './routes/cases.js';
 import type { AppContext } from './routes/context.js';
 import { eventsRouter } from './routes/events.js';
 import { matchRouter } from './routes/match.js';
+import { proRouter } from './routes/pro.js';
 import { remindersRouter } from './routes/reminders.js';
 import { metaRouter } from './routes/meta.js';
 import { tipsRouter } from './routes/tips.js';
@@ -53,6 +54,7 @@ export function createApp(deps: AppDeps): Express {
   app.use(casesRouter(ctx));
   app.use(remindersRouter(ctx));
   app.use(tipsRouter(ctx));
+  app.use(proRouter(ctx));
   app.use(adminRouter(ctx));
 
   app.use(notFoundHandler);

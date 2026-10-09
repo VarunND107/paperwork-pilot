@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { type Request, Router } from 'express';
 import { requireCaseAccess } from '../http/caseAccess.js';
 import {
   createCase,
@@ -21,6 +21,9 @@ import {
 export function casesRouter(ctx: AppContext): Router {
   const router = Router();
   const { prisma, clock } = ctx;
+  // Members of an organisation (professional plan) may work their clients' cases.
+  const access = (req: Request, caseId: string) =>
+    requireCaseAccess(prisma, req, caseId, ctx.config.proEnabled);
 
   // A case holds personal progress: never cache it.
   router.use('/cases', (_req, res, next) => {
@@ -41,14 +44,14 @@ export function casesRouter(ctx: AppContext): Router {
 
   router.get('/cases/:id', async (req, res) => {
     const id = idParam.parse(req.params.id);
-    await requireCaseAccess(prisma, req, id);
+    await access(req, id);
     res.json({ case: await getCaseView(prisma, id, clock()) });
   });
 
   // Event date and reminder settings.
   router.patch('/cases/:id', async (req, res) => {
     const id = idParam.parse(req.params.id);
-    await requireCaseAccess(prisma, req, id);
+    await access(req, id);
     const body = patchCaseBody.parse(req.body);
     res.json({ case: await updateCaseSettings(prisma, id, body, clock()) });
   });
@@ -57,7 +60,7 @@ export function casesRouter(ctx: AppContext): Router {
   router.patch('/cases/:id/steps/:stepId', async (req, res) => {
     const id = idParam.parse(req.params.id);
     const stepId = idParam.parse(req.params.stepId);
-    await requireCaseAccess(prisma, req, id);
+    await access(req, id);
     const { done } = patchStepBody.parse(req.body);
     const result = await setStepDone(prisma, id, stepId, done, clock());
     res.json({ case: result.view, changes: result.changes, unchanged: result.unchanged });
@@ -67,21 +70,21 @@ export function casesRouter(ctx: AppContext): Router {
   router.patch('/cases/:id/documents/:docId', async (req, res) => {
     const id = idParam.parse(req.params.id);
     const docId = idParam.parse(req.params.docId);
-    await requireCaseAccess(prisma, req, id);
+    await access(req, id);
     const { ticked } = patchDocumentBody.parse(req.body);
     res.json({ case: await setDocumentTicked(prisma, id, docId, ticked, clock()) });
   });
 
   router.post('/cases/:id/reset', async (req, res) => {
     const id = idParam.parse(req.params.id);
-    await requireCaseAccess(prisma, req, id);
+    await access(req, id);
     res.json({ case: await resetCase(prisma, id, clock()) });
   });
 
   // Delete the case and everything attached to it.
   router.delete('/cases/:id', async (req, res) => {
     const id = idParam.parse(req.params.id);
-    await requireCaseAccess(prisma, req, id);
+    await access(req, id);
     await deleteCase(prisma, id);
     res.status(204).end();
   });

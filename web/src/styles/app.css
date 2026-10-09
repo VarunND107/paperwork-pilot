@@ -336,7 +336,8 @@ fieldset.panel-prov legend {
 }
 
 /* Admin panel */
-.admin-bar {
+.admin-bar,
+.pro-bar {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -495,4 +496,44 @@ fieldset.panel-prov legend {
   padding: 0;
   display: grid;
   gap: 14px;
+}
+
+/* Professional plan */
+.pro-bar {
+  align-items: center;
+}
+.pro-forms {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  align-items: start;
+}
+.mono-input {
+  font-family: var(--f-mono);
+  font-size: 0.85rem;
+}
+.p-note {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.78rem;
+  color: var(--ink-2);
+}
+.team-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.team-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 14px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule);
+}
+.team-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
 }

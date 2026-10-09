@@ -137,6 +137,26 @@ Tests must pass before every commit. Commit messages start with the phase, for e
 - Moderating is not a data edit, so it needs no `sourceUrl`; it still needs the admin session and
   the same-origin check.
 
+## Professional plan (`api/src/pro`, `web/src/pro`)
+
+- Behind `PRO_ENABLED` (off by default). When off, **every `/pro/*` route is a 404** and member
+  keys stop working on `/cases` too. The web app reads the flag from `GET /config`.
+- Organisations and members: `POST /pro/orgs` creates an organisation and its first member, an
+  OWNER. Owners add and remove colleagues (`/pro/members`). Roles are `OWNER` and `MEMBER`; only
+  owners change the team. An owner cannot remove themselves.
+- **Interim sign-in, no email login yet.** Each member holds a secret access key (`pp_member_...`),
+  shown once, stored hashed (SHA-256) like a case token, and kept in the browser's localStorage.
+  A member can replace their own key (`POST /pro/me/rotate-key`); the old one stops at once. The
+  email on sign-up is a label, not verified. Real email magic-link login replaces this later.
+- A client is a case with `orgId` and `clientName`. Members work it through the ordinary `/cases/:id`
+  routes with their member key (`requireCaseAccess(..., allowMembers)`): only for cases of their
+  own organisation, otherwise 404. The client's own case token is never handed out.
+- Dashboard (`GET /pro/clients`): progress, next step and status for each client. Status is
+  `caseHealth()` from the engine: **Overdue** beats **Needs document** beats **On track**. Rows
+  are computed in bulk (two queries for all progress, one definition per situation). Filters:
+  `filter=attention`, `status`, `event` (id or slug), `q` (name). The counts ignore the status
+  filters. At most 500 clients are listed (`truncated` says so).
+
 ## Data rules
 
 - Seeded rows: `verified=false`, `lastVerifiedAt=null`. The seeder only creates missing rows and
