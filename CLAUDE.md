@@ -120,6 +120,23 @@ Tests must pass before every commit. Commit messages start with the phase, for e
   the case access token.
 - Run once by hand: `npm run reminders:run`.
 
+## Tips (`api/src/tips`, admin Tips page)
+
+- A visitor writes a tip about **one step or one office** (`POST /tips`). It is stored `PENDING`
+  and is **not public** until a moderator approves it in `/admin/tips`. A tip about an office shows
+  on every step that goes to that office.
+- Text rules (`tips/rules.ts`): 10 to 400 characters, whitespace collapsed, and **no links, email
+  addresses or long numbers** (phone, Aadhaar). Moderators reword under the same rules. At most 25
+  tips wait per step or office, and `POST /tips` and `flag-stale` share the `tips` rate limit.
+- Nothing identifies the writer: no account, no IP stored. Visitor tips show their **date**; sample
+  (seed) tips show "sample" and no date.
+- "This looks out of date" (`POST /tips/:id/flag-stale`, public tips only) is one vote per browser.
+  The browser sends a random id in `X-Voter-Id`; only an HMAC of it is stored. A flagged tip stays
+  visible with "flagged out of date by N people" and returns to the moderation queue; a moderator
+  can hide it, reword it or clear the flags. Flags never hide a tip on their own.
+- Moderating is not a data edit, so it needs no `sourceUrl`; it still needs the admin session and
+  the same-origin check.
+
 ## Data rules
 
 - Seeded rows: `verified=false`, `lastVerifiedAt=null`. The seeder only creates missing rows and

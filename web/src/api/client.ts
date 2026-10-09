@@ -24,12 +24,13 @@ interface CallOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
   body?: unknown;
   token?: string | null;
+  headers?: Record<string, string>;
   signal?: AbortSignal;
 }
 
 /** The browser always talks to /api/*; Vite (dev) and nginx (Docker) strip the prefix. */
 export async function call<T>(path: string, options: CallOptions = {}): Promise<T> {
-  const headers: Record<string, string> = { Accept: 'application/json' };
+  const headers: Record<string, string> = { Accept: 'application/json', ...options.headers };
   if (options.body !== undefined) headers['Content-Type'] = 'application/json';
   if (options.token) headers.Authorization = `Bearer ${options.token}`;
 
@@ -104,6 +105,18 @@ export const api = {
     call<{ case: CaseView }>(`/cases/${id}/reset`, { method: 'POST', token }).then((r) => r.case),
   deleteCase: (id: string, token: string) =>
     call<undefined>(`/cases/${id}`, { method: 'DELETE', token }),
+  /** A visitor's tip about one step or one office. It waits for a moderator before it shows. */
+  submitTip: (target: { stepId: string } | { officeId: string }, body: string) =>
+    call<{ tip: { id: string; status: 'PENDING' } }>('/tips', {
+      method: 'POST',
+      body: { ...target, body },
+    }),
+  /** Says a tip looks out of date. One vote per browser, however often it is sent. */
+  flagTip: (tipId: string, voterId: string) =>
+    call<{ tip: { id: string; staleFlags: number } }>(`/tips/${tipId}/flag-stale`, {
+      method: 'POST',
+      headers: { 'X-Voter-Id': voterId },
+    }),
   /** The link in a reminder email: proves itself with a signature, so no access token is needed. */
   unsubscribe: (caseId: string, sig: string) =>
     call<{ ok: true }>('/reminders/unsubscribe', { method: 'POST', body: { caseId, sig } }),

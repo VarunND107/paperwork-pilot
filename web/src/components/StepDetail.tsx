@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { StepView } from '../api/types';
+import type { StepView, TipView } from '../api/types';
 import { cx, formatDateOnly } from '../lib/format';
 import { TipBlock } from './TipBlock';
 import { VerificationNote } from './VerificationNote';
@@ -20,6 +20,10 @@ interface Props {
   onUndo: () => void;
   onJump: (stepId: string) => void;
   onOpen: (stepId: string) => void;
+  /** Says a tip looks out of date. Without it the flag button is not shown. */
+  onFlagTip?: (tip: TipView) => void;
+  flaggedTips?: ReadonlySet<string>;
+  tipErrors?: ReadonlyMap<string, string>;
   /** Extra content under the tips, for example the "add a tip" form. */
   children?: ReactNode;
 }
@@ -36,6 +40,9 @@ export function StepDetail({
   onUndo,
   onJump,
   onOpen,
+  onFlagTip,
+  flaggedTips,
+  tipErrors,
   children,
 }: Props) {
   const { t, i18n } = useTranslation();
@@ -166,7 +173,14 @@ export function StepDetail({
       </fieldset>
 
       {step.tips.map((tip) => (
-        <TipBlock key={tip.id} tip={tip} />
+        <TipBlock
+          key={tip.id}
+          tip={tip}
+          officeName={step.office?.name}
+          onFlag={onFlagTip}
+          flagged={flaggedTips?.has(tip.id)}
+          flagError={tipErrors?.get(tip.id)}
+        />
       ))}
       {children}
 

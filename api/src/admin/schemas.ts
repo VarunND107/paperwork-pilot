@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { tipText } from '../tips/rules.js';
 
 /**
  * Only http(s) links. Source URLs end up as links on public pages, so `javascript:`, `data:` and
@@ -169,3 +170,18 @@ export const officePatch = z.strictObject({
 });
 
 export const loginBody = z.strictObject({ password: z.string().min(1).max(200) });
+
+// ---- tips (moderation) --------------------------------------------------------------------
+
+export const tipFilterQuery = z.object({
+  filter: z.enum(['queue', 'pending', 'flagged', 'approved', 'rejected', 'all']).default('queue'),
+});
+
+/** Moderating a tip is not a data edit, so it needs no source. A moderator may reword it. */
+export const tipPatch = z
+  .strictObject({
+    status: z.enum(['APPROVED', 'REJECTED']).optional(),
+    clearFlags: z.literal(true).optional(),
+    body: tipText.optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, 'Nothing to change.');

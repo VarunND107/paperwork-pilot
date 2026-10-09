@@ -11,6 +11,7 @@ import { eventsRouter } from './routes/events.js';
 import { matchRouter } from './routes/match.js';
 import { remindersRouter } from './routes/reminders.js';
 import { metaRouter } from './routes/meta.js';
+import { tipsRouter } from './routes/tips.js';
 
 export interface AppDeps {
   config: Config;
@@ -51,6 +52,7 @@ export function createApp(deps: AppDeps): Express {
   app.use(matchRouter(ctx));
   app.use(casesRouter(ctx));
   app.use(remindersRouter(ctx));
+  app.use(tipsRouter(ctx));
   app.use(adminRouter(ctx));
 
   app.use(notFoundHandler);

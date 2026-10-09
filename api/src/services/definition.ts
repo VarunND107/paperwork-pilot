@@ -3,19 +3,23 @@ import { buildRequirements, type StepDocumentRow } from '../engine/documents.js'
 import type { RouteStepInput } from '../engine/route.js';
 import type { Due } from '../engine/types.js';
 
+/** Only tips a moderator approved are public; the newest few. */
+const PUBLIC_TIPS = {
+  where: { status: 'APPROVED' },
+  orderBy: { createdAt: 'desc' },
+  take: 5,
+  include: { _count: { select: { flags: true } } },
+} satisfies Prisma.Step$tipsArgs;
+
 const EVENT_INCLUDE = {
   steps: {
     orderBy: { position: 'asc' },
     include: {
-      office: true,
+      // Tips about the office show on every step that goes to it.
+      office: { include: { tips: PUBLIC_TIPS } },
       needs: true,
       documents: { orderBy: { position: 'asc' }, include: { document: true } },
-      tips: {
-        where: { status: 'APPROVED' },
-        orderBy: { createdAt: 'desc' },
-        take: 5,
-        include: { _count: { select: { flags: true } } },
-      },
+      tips: PUBLIC_TIPS,
     },
   },
 } satisfies Prisma.EventInclude;

@@ -143,6 +143,22 @@ select.input {
 .tip .link {
   margin-top: 6px;
 }
+.tip-flags:empty {
+  display: none;
+}
+.tip-form {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.tip-form .form-msg:empty {
+  display: none;
+}
+.tip-form .panel {
+  width: 100%;
+  margin: 0;
+}
 .d-source {
   margin-top: 18px;
   padding-top: 12px;
@@ -471,4 +487,12 @@ fieldset.panel-prov legend {
 }
 .prow-link {
   font-weight: 600;
+}
+
+/* Admin: the tip moderation queue */
+.tip-queue {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 14px;
 }

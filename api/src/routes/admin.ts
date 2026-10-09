@@ -14,6 +14,8 @@ import {
   stepCreate,
   stepDocumentsPut,
   stepPatch,
+  tipFilterQuery,
+  tipPatch,
 } from '../admin/schemas.js';
 import {
   ADMIN_COOKIE,
@@ -24,6 +26,7 @@ import {
   verifyAdminSession,
 } from '../admin/session.js';
 import * as admin from '../admin/service.js';
+import * as tips from '../admin/tips.js';
 import { HttpError } from '../errors.js';
 import type { AppContext } from './context.js';
 import { idParam } from './schemas.js';
@@ -206,6 +209,22 @@ export function adminRouter(ctx: AppContext): Router {
   });
   router.delete('/admin/offices/:id', async (req, res) => {
     await admin.deleteOffice(prisma, idParam.parse(req.params.id));
+    res.status(204).end();
+  });
+
+  // Tips from visitors: the moderation queue. Approving shows a tip; rejecting hides it.
+  router.get('/admin/tips', async (req, res) => {
+    const { filter } = tipFilterQuery.parse(req.query);
+    res.json(await tips.listTips(prisma, filter));
+  });
+  router.patch('/admin/tips/:id', async (req, res) => {
+    const body = tipPatch.parse(req.body);
+    res.json({
+      tip: await tips.moderateTip(prisma, idParam.parse(req.params.id), body, clock()),
+    });
+  });
+  router.delete('/admin/tips/:id', async (req, res) => {
+    await tips.deleteTip(prisma, idParam.parse(req.params.id));
     res.status(204).end();
   });
 

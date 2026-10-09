@@ -27,6 +27,8 @@ export interface OfficeView {
 
 export interface TipView {
   id: string;
+  /** Whether the tip is about the step itself or about the office it goes to. */
+  scope: 'step' | 'office';
   body: string;
   /** SEED tips are sample text; USER tips came from a visitor and were approved by a moderator. */
   origin: 'SEED' | 'USER';

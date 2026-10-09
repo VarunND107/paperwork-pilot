@@ -384,6 +384,7 @@ describe('StepDetail: tips', () => {
       tips: [
         {
           id: 't1',
+          scope: 'step',
           body: 'Go after 2 pm.',
           origin: 'USER',
           createdAt: '2026-09-01T05:00:00.000Z',
@@ -394,6 +395,82 @@ describe('StepDetail: tips', () => {
     setup(withUserTip);
     expect(screen.getByText(/^Tip from a visitor · 1 Sep/)).toBeInTheDocument();
     expect(screen.getByText('Flagged out of date by 2 people')).toBeInTheDocument();
+  });
+
+  it('says which office a tip about an office is for', () => {
+    const s = step({
+      ...ready(),
+      office: { id: 'o1', name: 'Ward office', kind: 'OFFICE', url: null },
+      tips: [
+        {
+          id: 't9',
+          scope: 'office',
+          body: 'The ground floor counter is quickest.',
+          origin: 'USER',
+          createdAt: '2026-09-01T05:00:00.000Z',
+          staleFlags: 0,
+        },
+      ],
+    });
+    setup(s);
+    expect(screen.getByText(/^Tip about Ward office from a visitor · 1 Sep/)).toBeInTheDocument();
+  });
+
+  describe('flagging a tip as out of date', () => {
+    const userTip = (over: Partial<StepView['tips'][number]> = {}): StepView =>
+      step({
+        ...ready(),
+        tips: [
+          {
+            id: 't1',
+            scope: 'step',
+            body: 'Go after 2 pm.',
+            origin: 'USER',
+            createdAt: '2026-09-01T05:00:00.000Z',
+            staleFlags: 0,
+            ...over,
+          },
+        ],
+      });
+
+    it('offers the button only on visitor tips, and only when flagging is wired up', () => {
+      setup(userTip());
+      expect(
+        screen.queryByRole('button', { name: 'This looks out of date' }),
+      ).not.toBeInTheDocument();
+      const onFlagTip = vi.fn();
+      setup(ready(), { onFlagTip });
+      expect(
+        screen.queryByRole('button', { name: 'This looks out of date' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('reports the tip that was flagged', async () => {
+      const onFlagTip = vi.fn();
+      const user = userEvent.setup();
+      const s = userTip();
+      setup(s, { onFlagTip });
+      await user.click(screen.getByRole('button', { name: 'This looks out of date' }));
+      expect(onFlagTip).toHaveBeenCalledWith(s.tips[0]);
+    });
+
+    it('says thank you after flagging, keeps focus on the button and does not send twice', async () => {
+      const onFlagTip = vi.fn();
+      const user = userEvent.setup();
+      setup(userTip(), { onFlagTip, flaggedTips: new Set(['t1']) });
+      const button = screen.getByRole('button', { name: 'Flagged, thank you' });
+      expect(button).toHaveAttribute('aria-disabled', 'true');
+      await user.click(button);
+      expect(onFlagTip).not.toHaveBeenCalled();
+    });
+
+    it('announces a failure', () => {
+      setup(userTip(), {
+        onFlagTip: vi.fn(),
+        tipErrors: new Map([['t1', 'We could not record that.']]),
+      });
+      expect(screen.getByRole('alert')).toHaveTextContent('We could not record that.');
+    });
   });
 
   it('renders extra content under the tips', () => {

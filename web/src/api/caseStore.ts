@@ -7,6 +7,7 @@
 const CASES_KEY = 'pp:cases'; // { [caseId]: token }
 const DEMO_KEY = 'pp:demo'; // { [eventSlug]: caseId }
 const VOTER_KEY = 'pp:voter';
+const FLAGGED_KEY = 'pp:flagged-tips'; // [tipId]
 
 /** Holds only what localStorage refused to keep (blocked or full), never a shadow copy. */
 const memory = new Map<string, string>();
@@ -76,6 +77,19 @@ export const caseStore = {
   /** Every case saved in this browser, newest-saved last. */
   caseIds(): string[] {
     return Object.keys(readMap(CASES_KEY));
+  },
+  /** Tips this browser has already flagged, so the button can say so after a reload. */
+  flaggedTips(): string[] {
+    try {
+      const parsed: unknown = JSON.parse(read(FLAGGED_KEY) ?? '[]');
+      return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === 'string') : [];
+    } catch {
+      return [];
+    }
+  },
+  markTipFlagged(tipId: string): void {
+    const ids = caseStore.flaggedTips();
+    if (!ids.includes(tipId)) write(FLAGGED_KEY, JSON.stringify([...ids, tipId].slice(-200)));
   },
   /** An anonymous id used only so one browser cannot flag the same tip twice. */
   voterId(): string {

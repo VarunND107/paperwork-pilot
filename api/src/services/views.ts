@@ -40,9 +40,23 @@ export function eventSummary(
   };
 }
 
-function tipView(tip: LoadedStep['tips'][number]): TipView {
+const TIPS_SHOWN = 5;
+
+/** The step's own tips and its office's tips, newest first. */
+function tipsFor(step: LoadedStep): TipView[] {
+  return [
+    ...step.tips.map((tip) => ({ tip, scope: 'step' as const })),
+    ...(step.office?.tips ?? []).map((tip) => ({ tip, scope: 'office' as const })),
+  ]
+    .sort((a, b) => b.tip.createdAt.getTime() - a.tip.createdAt.getTime())
+    .slice(0, TIPS_SHOWN)
+    .map(({ tip, scope }) => tipView(tip, scope));
+}
+
+function tipView(tip: LoadedStep['tips'][number], scope: TipView['scope']): TipView {
   return {
     id: tip.id,
+    scope,
     body: tip.body,
     origin: tip.origin,
     createdAt: tip.origin === 'USER' ? tip.createdAt.toISOString() : null,
@@ -124,7 +138,7 @@ export function buildStepViews(
       docsComplete: v.docsComplete,
       canComplete: v.canComplete,
       doneAt: state.doneAt.get(step.id)?.toISOString() ?? null,
-      tips: step.tips.map(tipView),
+      tips: tipsFor(step),
       verification: {
         sourceUrl: step.sourceUrl,
         verified: step.verified,

@@ -7,6 +7,7 @@ import { EventPage } from './EventPage';
 import { EventsPage } from './EventsPage';
 import { OfficesPage } from './OfficesPage';
 import { StepEditorPage } from './StepEditorPage';
+import { TipsPage } from './TipsPage';
 import type { SessionInfo } from './types';
 import { ErrorBox } from './ui';
 
@@ -98,6 +99,9 @@ export default function AdminApp() {
               <li>
                 <NavLink to="/admin/offices">Offices</NavLink>
               </li>
+              <li>
+                <NavLink to="/admin/tips">Tips</NavLink>
+              </li>
             </ul>
           </nav>
           <button type="button" className="btn btn-sm" onClick={() => void signOut()}>
@@ -111,6 +115,7 @@ export default function AdminApp() {
           <Route path="steps/:id" element={<StepEditorPage />} />
           <Route path="documents" element={<DocumentsPage />} />
           <Route path="offices" element={<OfficesPage />} />
+          <Route path="tips" element={<TipsPage />} />
           <Route path="*" element={<Navigate to="events" replace />} />
         </Routes>
       </div>

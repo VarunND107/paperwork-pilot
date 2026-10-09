@@ -5,7 +5,9 @@ import type { EventSummary, StepView } from '../api/types';
 import { useMediaQuery, useReducedMotion, WIDE_QUERY } from '../hooks/useMediaQuery';
 import { cx } from '../lib/format';
 import type { CaseBoard } from '../state/useCaseBoard';
+import { useTipFlags } from '../state/useTipFlags';
 import { StepDetail } from './StepDetail';
+import { TipForm } from './TipForm';
 
 const ICON_CHECK = (
   <svg viewBox="0 0 16 16" width="16" height="16">
@@ -49,6 +51,7 @@ export function RouteBoard({
   detailExtras,
 }: Props) {
   const { t } = useTranslation();
+  const tipFlags = useTipFlags();
   const reduced = useReducedMotion();
   const wide = useMediaQuery(WIDE_QUERY);
   const { state } = board;
@@ -108,7 +111,13 @@ export function RouteBoard({
       }}
       onJump={choose}
       onOpen={choose}
+      onFlagTip={(tip) => {
+        void tipFlags.flag(tip);
+      }}
+      flaggedTips={tipFlags.flagged}
+      tipErrors={tipFlags.errors}
     >
+      <TipForm step={step} />
       {detailExtras?.(step)}
     </StepDetail>
   );

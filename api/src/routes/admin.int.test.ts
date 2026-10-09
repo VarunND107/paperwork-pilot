@@ -79,6 +79,9 @@ describe('admin: sign-in', () => {
       request(t.app).post('/admin/offices').send({}),
       request(t.app).patch('/admin/offices/x').send({}),
       request(t.app).delete('/admin/offices/x'),
+      request(t.app).get('/admin/tips'),
+      request(t.app).patch('/admin/tips/x').send({}),
+      request(t.app).delete('/admin/tips/x'),
     ];
     for (const res of await Promise.all(calls)) {
       expect(res.status).toBe(401);

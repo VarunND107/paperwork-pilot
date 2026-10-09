@@ -72,3 +72,24 @@ export interface AdminOfficeRow extends Provenance {
   hours: string | null;
   stepCount: number;
 }
+
+export type TipFilter = 'queue' | 'pending' | 'flagged' | 'approved' | 'rejected' | 'all';
+
+export interface AdminTipRow {
+  id: string;
+  body: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  origin: 'SEED' | 'USER';
+  createdAt: string;
+  moderatedAt: string | null;
+  /** How many browsers said this tip looks out of date. */
+  flagCount: number;
+  /** What the tip is about, in words a moderator recognises. */
+  target: { kind: 'step' | 'office'; id: string; label: string; context: string | null };
+}
+
+export interface AdminTipList {
+  tips: AdminTipRow[];
+  /** Waiting for a first review, and approved tips that visitors flagged. */
+  counts: { pending: number; flagged: number };
+}

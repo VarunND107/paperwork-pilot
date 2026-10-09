@@ -237,7 +237,7 @@ describe('Admin: sign in', () => {
       within(nav)
         .getAllByRole('link')
         .map((l) => l.textContent),
-    ).toEqual(['Situations', 'Documents', 'Offices']);
+    ).toEqual(['Situations', 'Documents', 'Offices', 'Tips']);
     expect(sent('POST', '/admin/login')[0]?.body).toEqual({ password: 'secret' });
   });
 

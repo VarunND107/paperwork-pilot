@@ -81,3 +81,22 @@ export interface EditProvenance {
   sourceUrl: string;
   verified: boolean;
 }
+
+export type TipFilter = 'queue' | 'pending' | 'flagged' | 'approved' | 'rejected' | 'all';
+
+export interface AdminTipRow {
+  id: string;
+  body: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  origin: 'SEED' | 'USER';
+  createdAt: string;
+  moderatedAt: string | null;
+  /** How many browsers said this tip looks out of date. */
+  flagCount: number;
+  target: { kind: 'step' | 'office'; id: string; label: string; context: string | null };
+}
+
+export interface AdminTipList {
+  tips: AdminTipRow[];
+  counts: { pending: number; flagged: number };
+}

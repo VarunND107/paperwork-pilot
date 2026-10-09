@@ -59,6 +59,7 @@ export function step(
     tips: [
       {
         id: `tip-${over.id}`,
+        scope: 'step',
         body: 'Bring the original.',
         origin: 'SEED',
         createdAt: null,
