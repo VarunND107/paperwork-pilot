@@ -39,6 +39,7 @@ design/   landing-page.html: the design source of truth. Do not edit; do not lin
 | ---------------------------------------- | -------------------------------------------------------- |
 | `npm install` then `npm run db:generate` | install and generate the Prisma client                   |
 | `npm run db:deploy` / `db:seed`          | apply migrations / seed sample data (create-if-missing)  |
+| `npm run db:up`                          | dev database on :5432 (adds `docker-compose.dev.yml`)    |
 | `npm run dev`                            | API on :4000 and web on :5173 (web proxies `/api`)       |
 | `npm run check`                          | lint + format check + typecheck + unit/integration tests |
 | `npm run e2e`                            | Playwright smoke test (needs the database)               |

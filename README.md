@@ -35,12 +35,16 @@ three sample situations automatically.
 
 Reminder emails are **written to the API log, not sent** (`docker compose logs api`).
 
+Only the website's port (8080) is opened on your computer; the API and database stay inside Docker.
+If Windows says that port is not available, set `WEB_PORT` in `.env` to another number such as `8081`
+and run `start.bat` again.
+
 ### For development (hot reload)
 
 `dev.bat` on Windows does everything below. By hand, with Node 22+ and Docker (for Postgres):
 
 ```bash
-docker compose up -d --wait db   # Postgres on :5432
+npm run db:up                    # Postgres on :5432 (docker-compose.dev.yml)
 npm run setup                    # install, generate Prisma client, migrate, seed
 npm run dev                      # API :4000, web :5173 (the web proxies /api)
 ```

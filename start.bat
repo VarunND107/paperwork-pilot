@@ -48,6 +48,10 @@ if errorlevel 1 (
   echo.
   echo docker compose failed. Scroll up for the reason, or run:  docker compose logs
   echo.
+  echo If it says a port is not available, another program is using that port.
+  echo Open the file .env in this folder, change WEB_PORT=8080 to another number such as 8081,
+  echo and run start.bat again.
+  echo.
   pause
   exit /b 1
 )

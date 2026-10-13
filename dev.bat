@@ -38,9 +38,10 @@ if not exist ".env" (
 )
 
 echo Starting the database...
-docker compose up -d --wait db
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --wait db
 if errorlevel 1 (
-  echo Could not start the database. Run:  docker compose logs db
+  echo Could not start the database. If it says a port is not available, change DB_PORT in .env
+  echo and the port in DATABASE_URL to the same unused number, for example 5433. Or run:  docker compose logs db
   pause
   exit /b 1
 )

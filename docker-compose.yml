@@ -1,6 +1,10 @@
 name: paperwork-pilot
 
 # One command: docker compose up --build   (or run start.bat / start.sh)
+#
+# Only the website's port (WEB_PORT) is opened on your computer. The API and the database talk to
+# each other over Docker's own network, and the website reaches the API through /api. For
+# development, docker-compose.dev.yml also opens the database port.
 services:
   db:
     image: postgres:16-alpine
@@ -16,8 +20,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
-    ports:
-      - '127.0.0.1:${DB_PORT:-5432}:5432'
 
   api:
     build:
@@ -50,8 +52,6 @@ services:
       timeout: 5s
       retries: 30
       start_period: 15s
-    ports:
-      - '127.0.0.1:${API_PORT:-4000}:4000'
 
   web:
     build:

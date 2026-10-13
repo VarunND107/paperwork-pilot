@@ -1,0 +1,7 @@
+# Development only. Adds the database port on this computer so `npm run dev` can reach Postgres:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --wait db   (npm run db:up)
+# start.bat / start.sh do not use this file, so they never need port 5432 to be free.
+services:
+  db:
+    ports:
+      - '127.0.0.1:${DB_PORT:-5432}:5432'
